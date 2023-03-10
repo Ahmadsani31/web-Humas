@@ -14,7 +14,8 @@ class Datatable extends BaseController
         switch ($d) {
             case 'mitra':
                 $table = $d;
-                $db = $this->mMitra->getData();
+                $JenisMitraID = $this->request->getPost('jenisMitra');
+                $db = $this->mMitra->getData($JenisMitraID);
                 break;
             case 'tingkat':
                 $table = $d;

@@ -14,7 +14,7 @@ class Kerma extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['JenisDokumenID', 'NoDokumen', 'MitraID', 'TingkatID', 'UnitID', 'UnitTerkaitID', 'TglMulai', 'TglSelesai', 'BidangID', 'LingkupID', 'JudulKegiatan', 'Manfaat', 'PeranKontribusi'];
+    protected $allowedFields    = ['JenisDokumenID', 'FileDokumen', 'NoDokumen', 'UnitID', 'UnitTerkaitID', 'TglMulai', 'TglSelesai', 'BidangID', 'LingkupID', 'JudulKegiatan', 'Manfaat', 'PeranKontribusi'];
 
     // Dates
     protected $useTimestamps = true;
@@ -26,19 +26,21 @@ class Kerma extends Model
 
     // Validation
     protected $validationRules      = [
+
         'JudulKegiatan'       =>        [
+            'label'  => 'Judul kegiatan',
             'rules' => 'required|min_length[3]|max_length[255]',
         ],
-        'TingkatID'       =>        [
-            'rules' => 'required',
-        ],
         'MitraID'       =>        [
+            'label'  => 'Mitra',
             'rules' => 'required',
         ],
         'JenisDokumenID' => [
+            'label'  => 'Jenis Dokument',
             'rule' => 'required'
         ],
         'NoDokumen' => [
+            'label'  => 'Nomor dokument',
             'rule' => 'required'
         ],
         'TglMulai' => [
@@ -53,9 +55,6 @@ class Kerma extends Model
         'LingkupID' => [
             'rule' => 'required'
         ],
-        'JudulKegiatan' => [
-            'rule' => 'required'
-        ],
         'Manfaat' => [
             'rule' => 'required'
         ],
@@ -67,9 +66,6 @@ class Kerma extends Model
         'JudulKegiatan' => [
             'required' => '{field} harus diisi',
             'min_length' => '{field} minimal 3 huruf',
-        ],
-        'TingkatID' => [
-            'required' => '{field} Harus diisi',
         ],
         'MitraID' => [
             'required' => '{field} Harus diisi',
@@ -106,26 +102,26 @@ class Kerma extends Model
     protected $allowCallbacks = true;
     protected $beforeInsert   = ['beforeInsert'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
+    protected $beforeUpdate   = ['beforeUpdate'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = ['afterDelete'];
 
-    public function getData($MitraID, $JenisDokumenID, $TingkatID, $UnitID, $StatusID)
+    public function getData($JenisMitraID, $JenisDokumenID, $TingkatID, $UnitID, $StatusID)
     {
         $builder = $this->table('kerma')
-            ->select('kerma.DDeleted,kerma.NoDokumen,kerma.JenisDokumenID,kerma.NA,kerma.KermaID,kerma.FileDokumen,mitra_jenis.Nama as NamaJenisMitra,kerma_ruang_lingkup.Nama as NamaLingkup, kerma.UnitID,kerma.UnitTerkaitID,kerma.TglMulai,kerma.TglSelesai, mitra.Nama as NamaMitra,kerma_tingkat.Nama as NamaTingkat,kerma_bidang.Nama as NamaBidang,kerma.JudulKegiatan,kerma.Manfaat,kerma.PeranKontribusi,')
-            ->join('mitra', 'mitra.MitraID=kerma.MitraID')
-            ->join('mitra_jenis', 'mitra_jenis.JenisMitraID=mitra.JenisMitraID')
-            ->join('kerma_tingkat', 'kerma_tingkat.TingkatID=kerma.TingkatID')
-            ->join('kerma_bidang', 'kerma_bidang.BidangID=kerma.BidangID')
-            ->join('kerma_ruang_lingkup', 'kerma_ruang_lingkup.LingkupID=kerma.LingkupID')
+            ->select('kerma.LingkupID,mitra.TingkatID,mitra.JenisMitraID,kerma.LinkDokumen,kerma.DDeleted,kerma.NoDokumen,kerma.JenisDokumenID,kerma.NA,kerma.KermaID,kerma.FileDokumen,mitra_jenis.Nama as NamaJenisMitra,kerma_ruang_lingkup.Nama as NamaLingkup, kerma.UnitID,kerma.UnitTerkaitID,kerma.TglMulai,kerma.TglSelesai, mitra.Nama as NamaMitra,kerma_tingkat.Nama as NamaTingkat,kerma_bidang.Nama as NamaBidang,kerma.JudulKegiatan,kerma.Manfaat,kerma.PeranKontribusi,kerma.FileDokumen')
+            ->join('mitra', 'mitra.MitraID=kerma.MitraID', 'LEFT')
+            ->join('mitra_jenis', 'mitra_jenis.JenisMitraID=mitra.JenisMitraID', 'LEFT')
+            ->join('kerma_tingkat', 'kerma_tingkat.TingkatID=mitra.TingkatID', 'LEFT')
+            ->join('kerma_bidang', 'kerma_bidang.BidangID=kerma.BidangID', 'LEFT')
+            ->join('kerma_ruang_lingkup', 'kerma_ruang_lingkup.LingkupID=kerma.LingkupID', 'LEFT')
             ->where('kerma.DDeleted', null)
             ->where('kerma.NA', 'N');
-        if (!empty($MitraID)) {
-            $builder->where('mitra.MitraID', $MitraID);
+        if (!empty($JenisMitraID)) {
+            $builder->where('mitra_jenis.JenisMitraID', $JenisMitraID);
         }
         if (!empty($JenisDokumenID)) {
             $builder->where('kerma.JenisDokumenID', $JenisDokumenID);
@@ -145,6 +141,17 @@ class Kerma extends Model
                 $builder->where('kerma.TglSelesai <=', date('Y-m-d'));
             }
         }
+        $builder->orderBy('year(TglMulai)', 'DESC');
+        $builder->orderBy('KermaID');
+        // $builder->limit(10);
+        return $builder;
+    }
+
+    public function getRows()
+    {
+        $builder = db_connect()->table($this->table)
+            ->where('DDeleted', null)
+            ->where('NA', 'N')->get()->getNumRows();
         return $builder;
     }
     //callback
@@ -154,8 +161,21 @@ class Kerma extends Model
         return $data;
     }
 
+    protected function beforeUpdate(array $data)
+    {
+        $data['data']['UEdited'] = session()->get('s_Nama');
+        return $data;
+    }
+
     protected function afterDelete(array $data)
     {
-        db_connect()->query('UPDATE ' . $this->table . ' SET NA="Y", UDelete="' . session()->get('s_Nama') . '" WHERE ' . $this->primaryKey . '="' . $data['id'][0] . '"');
+        $builder = db_connect()->table($this->table);
+        $dataUpdate = [
+            'NA' => 'Y',
+            'UDelete'  => session()->get('s_Nama'),
+        ];
+        $builder->where($this->primaryKey, $data['id'][0]);
+        $builder->update($dataUpdate);
+        // db_connect()->query('UPDATE ' . $this->table . ' SET NA="Y", UDelete="' . session()->get('s_Nama') . '" WHERE ' . $this->primaryKey . '="' . $data['id'][0] . '"');
     }
 }

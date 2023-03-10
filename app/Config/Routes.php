@@ -39,6 +39,7 @@ $routes->group('auth', ['filter' => 'beforeLogin'], function ($routes) {
 
 $routes->group('/dashboard', ['filter' => 'afterLogin'], function ($routes) {
     $routes->get('/', 'Dashboard::index');
+    $routes->get('grafik', 'Dashboard::grafikDashboard');
 });
 
 
@@ -60,11 +61,17 @@ $routes->group('mitra', ['filter' => 'afterLogin'], function ($routes) {
     $routes->post('saveMitra', 'Mitra::saveMitra', ['as' => 'save.mitra']);
     $routes->post('saveTingkat', 'Mitra::saveTingkat', ['as' => 'save.tingkat']);
     $routes->post('saveJenis', 'Mitra::saveJenisMitra', ['as' => 'save.jenis']);
+    $routes->post('importExcel', 'Mitra::uploadExcelMitra');
 });
 
-$routes->group('/kerma', ['filter' => 'afterLogin'], function ($routes) {
-    $routes->get('', 'Kerma::index');
+$routes->group('kerma', ['filter' => 'afterLogin'], function ($routes) {
+    $routes->get('/', 'Kerma::index');
+    $routes->get('rekap', 'Kerma::rekap');
     $routes->post('saveKerma', 'Kerma::saveKerma', ['as' => 'save.kerma']);
+    $routes->post('lapAkreditas', 'Kerma::lapAkreditas', ['as' => 'kerma-cetak.akreditasi']);
+    $routes->post('lapLldikti', 'Kerma::lapLldikti', ['as' => 'kerma-cetak.lldikti']);
+    $routes->post('lapMatriks', 'Kerma::lapMatriks', ['as' => 'kerma-cetak.matriks']);
+    $routes->post('importExcel', 'Kerma::uploadExcelKerma');
 });
 
 $routes->post('/modal/(:any)', 'Modal::index', ['filter' => 'afterLogin']);
@@ -73,6 +80,8 @@ $routes->post('server-side', 'ServerSide::index', ['filter' => 'afterLogin']);
 $routes->post('select2/(:any)', 'Select2::index', ['filter' => 'afterLogin']);
 $routes->post('delete', 'Delete::index', ['filter' => 'afterLogin']);
 $routes->get('logout', 'Auth::logout');
+
+$routes->get('tools-kerma', 'Tools::index');
 /*
  * --------------------------------------------------------------------
  * Additional Routing

@@ -77,4 +77,5 @@
             word-break: keep-all;
         }
     </style>
+    <?= $this->renderSection('contentCSS'); ?>
 </head>

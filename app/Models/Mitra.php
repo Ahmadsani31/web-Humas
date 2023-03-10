@@ -29,9 +29,11 @@ class Mitra extends Model
             'rules' => 'required|min_length[3]|max_length[255]',
         ],
         'TingkatID'       =>        [
+            'label'  => 'Tingkatan Mitra',
             'rules' => 'required',
         ],
         'JenisMitraID'       =>        [
+            'label'  => 'Jenis Mitra',
             'rules' => 'required',
         ],
         'Kontak' => [
@@ -60,18 +62,30 @@ class Mitra extends Model
     protected $allowCallbacks = true;
     protected $beforeInsert   = ['beforeInsert'];
     protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
+    protected $beforeUpdate   = ['beforeUpdate'];
     protected $afterUpdate    = [];
     protected $beforeFind     = [];
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = ['afterDelete'];
 
-    public function getData()
+    public function getData($JenisMitraID = null)
     {
         $builder = db_connect()->table($this->table)
             ->where('DDeleted', null)
-            ->where('NA', 'N')->get();
+            ->where('NA', 'N');
+        if ($JenisMitraID != null) {
+            $builder->where('JenisMitraID', $JenisMitraID);
+        }
+        $builder->orderBy('MitraID', 'DESC');
+        return $builder->get();
+    }
+
+    public function getRows()
+    {
+        $builder = db_connect()->table($this->table)
+            ->where('DDeleted', null)
+            ->where('NA', 'N')->get()->getNumRows();
         return $builder;
     }
     //callback
@@ -81,8 +95,21 @@ class Mitra extends Model
         return $data;
     }
 
+    protected function beforeUpdate(array $data)
+    {
+        $data['data']['UEdited'] = session()->get('s_Nama');
+        return $data;
+    }
+
     protected function afterDelete(array $data)
     {
-        db_connect()->query('UPDATE ' . $this->table . ' SET NA="Y", UDelete="' . session()->get('s_Nama') . '" WHERE ' . $this->primaryKey . '="' . $data['id'][0] . '"');
+        $builder = db_connect()->table($this->table);
+        $dataUpdate = [
+            'NA' => 'Y',
+            'UDelete'  => session()->get('s_Nama'),
+        ];
+        $builder->where($this->primaryKey, $data['id'][0]);
+        $builder->update($dataUpdate);
+        // $this->db_connect()->query('UPDATE ' . $this->table . ' SET NA="Y", UDelete="' . session()->get('s_Nama') . '" WHERE ' . $this->primaryKey . '="' . $data['id'][0] . '"');
     }
 }

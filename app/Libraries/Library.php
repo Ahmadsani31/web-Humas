@@ -4,6 +4,12 @@ namespace App\Libraries;
 
 class Library
 {
+
+    function loadPdf()
+    {
+        require_once(APPPATH . 'ThirdParty/fpdf/fancyrow.php');
+    }
+
     function Option($Table, $Primary, $Selected, $Nama, $where = '')
     {
 

@@ -19,10 +19,23 @@
     <script src="<?= base_url('assets'); ?>/datepicker/js/bootstrap-datetimepicker.min.js"></script>
     <script src="<?= base_url('assets'); ?>/js/select2.min.js"></script>
     <script src="<?= base_url('assets'); ?>/js/bs-custom-file-input.min.js"></script>
+
+    <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
     <script>
         $('.select2-aksi').select2({});
         $(document).ready(function() {
             bsCustomFileInput.init()
         })
+        // Enable pusher logging - don't include this in production
+        // Pusher.logToConsole = false;
+
+        // var pusher = new Pusher('f33770f7120db2f928aa', {
+        //     cluster: 'ap1'
+        // });
+
+        // var channel = pusher.subscribe('my-channel');
+        // channel.bind('my-event', function(data) {
+        //     alert(JSON.stringify(data));
+        // });
     </script>
     <?= $this->renderSection('contentJS'); ?>

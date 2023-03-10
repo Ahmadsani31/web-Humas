@@ -37,6 +37,7 @@ class Filters extends BaseConfig
             'csrf' => [
                 'except' => [
                     'dashboard',
+                    'dashboard/grafik',
                     'datatable',
                     'delete',
                     'modal/*',
@@ -44,8 +45,14 @@ class Filters extends BaseConfig
                     'mitra/saveJenis',
                     'mitra/saveMitra',
                     'mitra/saveTingkat',
+                    'mitra/importExcel',
                     'bidang/saveBidang',
                     'kerma/saveKerma',
+                    'kerma/cetak',
+                    'kerma/importExcel',
+                    'kerma/lapAkreditas',
+                    'kerma/lapMatriks',
+                    'kerma-cetak.lldikti',
                     'ruang-lingkup/saveRuangLingkup',
                     'server-side'
                 ]

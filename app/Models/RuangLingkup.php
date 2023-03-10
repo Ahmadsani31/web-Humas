@@ -63,8 +63,21 @@ class RuangLingkup extends Model
         return $data;
     }
 
+    protected function beforeUpdate(array $data)
+    {
+        $data['data']['UEdited'] = session()->get('s_Nama');
+        return $data;
+    }
+
     protected function afterDelete(array $data)
     {
-        db_connect()->query('UPDATE ' . $this->table . ' SET NA="Y", UDelete="' . session()->get('s_Nama') . '" WHERE ' . $this->primaryKey . '="' . $data['id'][0] . '"');
+        $builder = db_connect()->table($this->table);
+        $dataUpdate = [
+            'NA' => 'Y',
+            'UDelete'  => session()->get('s_Nama'),
+        ];
+        $builder->where($this->primaryKey, $data['id'][0]);
+        $builder->update($dataUpdate);
+        // db_connect()->query('UPDATE ' . $this->table . ' SET NA="Y", UDelete="' . session()->get('s_Nama') . '" WHERE ' . $this->primaryKey . '="' . $data['id'][0] . '"');
     }
 }

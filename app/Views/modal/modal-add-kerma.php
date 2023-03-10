@@ -1,7 +1,6 @@
 <?php
 
 $Nama = '';
-$TingkatID = '';
 $Manfaat = '';
 $JudulKegiatan = '';
 $LingkupID = '';
@@ -18,23 +17,26 @@ $class = 'danger';
 $required = 'required';
 $NoDokumen = '';
 $MitraID = '';
+$LinkDokumen = '';
 $KermaID =  $_POST['kermaid'];
 if (!empty($KermaID)) {
     $qeu = querySelect('', 'kerma', 'NA="N" AND KermaID="' . $KermaID . '"')->getRow();
-    $TingkatID = $qeu->TingkatID;
     $BidangID = $qeu->BidangID;
+
     $LingkupID = $qeu->LingkupID;
+    $UnitTerkaitID = $qeu->UnitTerkaitID;
+
     $JudulKegiatan = $qeu->JudulKegiatan;
     $Manfaat = $qeu->Manfaat;
     $PeranKontribusi = $qeu->PeranKontribusi;
     $JenisDokumenID = $qeu->JenisDokumenID;
     $UnitID = $qeu->UnitID;
-    $UnitTerkaitID = $qeu->UnitTerkaitID;
     $TglMulai = $qeu->TglMulai;
     $TglSelesai = $qeu->TglSelesai;
     $FileDokumen = $qeu->FileDokumen;
     $MitraID = $qeu->MitraID;
     $NoDokumen = $qeu->NoDokumen;
+    $LinkDokumen = $qeu->LinkDokumen;
 
     $class = 'danger';
     $required = '';
@@ -58,7 +60,7 @@ if (!empty($KermaID)) {
             <label for="" class="text-black">Jenis Dokument</label>
             <select name="JenisDokumenID" id="JenisDokumenID" class="form-control select2-aksi" style="width: 100%;">
                 <option value="">[Pilih]</option>
-                <?= App\Libraries\Library::OptCreate(['MOU', 'MOA', 'IA'], ['MOU', 'MOA', 'IA'], $JenisDokumenID); ?>
+                <?= Option('jenis_dokument', 'DokumentID', $JenisDokumenID, 'Nama'); ?>
             </select>
         </div>
         <div class="form-group">
@@ -99,26 +101,15 @@ if (!empty($KermaID)) {
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="" class="text-black">Mitra</label>
-                    <select name="MitraID" id="MitraID" class="form-control select2-aksi" style="width: 100%;">
-                        <option value="">[Pilih]</option>
-                        <?= Option('mitra', 'MitraID', $MitraID, 'Nama'); ?>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="" class="text-black">Tingkatan</label>
-                    <select name="TingkatID" id="TingkatID" class="form-control select2-aksi" style="width: 100%;">
-                        <option value="">[Pilih]</option>
-                        <?= Option('kerma_tingkat', 'TingkatID', $TingkatID, 'Nama'); ?>
-                    </select>
-                </div>
-            </div>
+
+        <div class="form-group">
+            <label for="" class="text-black">Mitra</label>
+            <select name="MitraID" id="MitraID" class="form-control select2-aksi" style="width: 100%;">
+                <option value="">[Pilih]</option>
+                <?= Option('mitra', 'MitraID', $MitraID, 'Nama'); ?>
+            </select>
         </div>
+
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -147,14 +138,25 @@ if (!empty($KermaID)) {
             <label class="text-black">Manfaat</label>
             <textarea class="form-control" name="Manfaat" rows="2" placeholder="Manfaat kerma"><?= $Manfaat; ?></textarea>
         </div>
-        <div class="form-group">
-            <div class="input-group is-invalid">
-                <div class="custom-file">
-                    <input type="file" name="FileDokumen" class="custom-file-input" id="validatedInputGroupCustomFile" <?= $required; ?>>
-                    <label class="custom-file-label" for="validatedInputGroupCustomFile"><?= $FileDokumen; ?></label>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="" class="text-black">Upload Dokumen</label>
+                    <div class="input-group is-invalid">
+                        <div class="custom-file">
+                            <input type="file" name="FileDokumen" class="custom-file-input" id="validatedInputGroupCustomFile">
+                            <label class="custom-file-label" for="validatedInputGroupCustomFile"><?= $FileDokumen; ?></label>
+                        </div>
+                        <div class="input-group-append">
+                            <a href="<?= $href; ?>" class="btn btn-sm btn-<?= $class; ?>"><i class="fa fa-file-pdf p-1"></i></a>
+                        </div>
+                    </div>
                 </div>
-                <div class="input-group-append">
-                    <a href="<?= $href; ?>" class="btn btn-sm btn-<?= $class; ?>"><i class="fa fa-file-pdf p-1"></i></a>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="" class="text-black">link Dokumen</label>
+                    <input type="text" name="LinkDokumen" class="form-control" value="<?= $LinkDokumen; ?>" placeholder="Url file dokument">
                 </div>
             </div>
         </div>

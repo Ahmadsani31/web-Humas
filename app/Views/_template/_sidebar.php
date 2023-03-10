@@ -17,24 +17,24 @@
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Heading -->
-    <div class="sidebar-heading">
-        Interface
-    </div>
-
-    <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link" href="<?= base_url('kerma'); ?>">
             <i class="fas fa-fw fa-table"></i>
             <span>Kerma</span></a>
     </li>
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Data
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-            <i class="fas fa-fw fa-cog"></i>
+            <i class="fas fa-fw fa-folder"></i>
             <span>Mitra</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
@@ -48,12 +48,12 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="<?= base_url('bidang'); ?>">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-cog"></i>
             <span>Bidang</span></a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="<?= base_url('ruang-lingkup'); ?>">
-            <i class="fas fa-fw fa-table"></i>
+            <i class="fas fa-fw fa-wrench"></i>
             <span>Ruang Lingkup</span></a>
     </li>
     <!-- Nav Item - Utilities Collapse Menu -->
